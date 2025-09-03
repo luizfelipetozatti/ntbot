@@ -1,0 +1,146 @@
+#region Using declarations
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Xml.Linq;
+using NinjaTrader.Cbi;
+using NinjaTrader.Data;
+using NinjaTrader.Gui.Tools;
+using NinjaTrader.NinjaScript;
+#endregion
+
+// Este namespace contém os elementos da GUI e é obrigatório.
+namespace NinjaTrader.Gui.NinjaScript
+{
+    // O NinjaTrader cria uma instância de cada classe derivada de "AddOnBase"
+    public class TradingBot : AddOnBase
+    {
+        private NTMenuItem tradingBotMenuItem;
+        private NTMenuItem existingMenuItemInControlCenter;
+
+        // Configura as propriedades padrão do AddOn
+        protected override void OnStateChange()
+        {
+            if (State == State.SetDefaults)
+            {
+                Description = "Bot para execução automática de estratégias de trading";
+                Name = "Trading Bot";
+            }
+        }
+
+        // É chamado quando uma nova janela do NinjaTrader é criada
+        protected override void OnWindowCreated(Window window)
+        {
+            // Queremos colocar nosso AddOn nos menus do Control Center
+            ControlCenter cc = window as ControlCenter;
+            if (cc == null)
+                return;
+
+            // Determina onde queremos colocar nosso AddOn no menu "New" do Control Center
+            existingMenuItemInControlCenter = cc.FindFirst("ControlCenterMenuItemNew") as NTMenuItem;
+            if (existingMenuItemInControlCenter == null)
+                return;
+
+            // 'Header' define o nome do nosso AddOn visto na estrutura do menu
+            tradingBotMenuItem = new NTMenuItem { Header = "Trading Bot", Style = Application.Current.TryFindResource("MainMenuItem") as Style };
+
+            // Adiciona nosso AddOn ao menu "New"
+            existingMenuItemInControlCenter.Items.Add(tradingBotMenuItem);
+
+            // Inscreve-se no evento quando o usuário pressiona o item de menu do nosso AddOn
+            tradingBotMenuItem.Click += OnMenuItemClick;
+        }
+
+        // É chamado quando uma janela do NinjaTrader é destruída
+        protected override void OnWindowDestroyed(Window window)
+        {
+            if (tradingBotMenuItem != null && window is ControlCenter)
+            {
+                if (existingMenuItemInControlCenter != null && existingMenuItemInControlCenter.Items.Contains(tradingBotMenuItem))
+                    existingMenuItemInControlCenter.Items.Remove(tradingBotMenuItem);
+
+                tradingBotMenuItem.Click -= OnMenuItemClick;
+                tradingBotMenuItem = null;
+            }
+        }
+
+        // Abre a janela do nosso AddOn quando o item de menu é clicado
+        private void OnMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            Core.Globals.RandomDispatcher.BeginInvoke(new Action(() => new TradingBotWindow().Show()));
+        }
+    }
+
+    // Factory para criação de abas na janela do Trading Bot
+    public class TradingBotWindowFactory : INTTabFactory
+    {
+        // Membro INTTabFactory. Necessário para criar a janela principal
+        public NTWindow CreateParentWindow()
+        {
+            return new TradingBotWindow();
+        }
+
+        // Membro INTTabFactory. Necessário para criar abas
+        public NTTabPage CreateTabPage(string typeName, bool isTrue)
+        {
+            return new NTBot.TradingBotPage();
+        }
+    }
+
+    // Define a janela principal do Trading Bot
+    public class TradingBotWindow : NTWindow, IWorkspacePersistence
+    {
+        public TradingBotWindow()
+        {
+            // Define o título da janela
+            Caption = "Trading Bot";
+
+            // Define as dimensões padrão da janela
+            Width = 1085;
+            Height = 900;
+
+            // Cria um controle de abas para o conteúdo da janela
+            TabControl tc = new TabControl();
+
+            // Configura as propriedades para permitir mover, adicionar e remover abas
+            TabControlManager.SetIsMovable(tc, true);
+            TabControlManager.SetCanAddTabs(tc, true);
+            TabControlManager.SetCanRemoveTabs(tc, true);
+
+            // Define a factory para criar novas abas
+            TabControlManager.SetFactory(tc, new TradingBotWindowFactory());
+            Content = tc;
+
+            // Adiciona a página principal do Trading Bot
+            tc.AddNTTabPage(new NTBot.TradingBotPage());
+
+            // Configura opções de workspace
+            Loaded += (o, e) =>
+            {
+                if (WorkspaceOptions == null)
+                    WorkspaceOptions = new WorkspaceOptions("TradingBot-" + Guid.NewGuid().ToString("N"), this);
+            };
+        }
+
+        // Membro IWorkspacePersistence. Necessário para restaurar a janela do workspace
+        public void Restore(XDocument document, XElement element)
+        {
+            if (MainTabControl != null)
+                MainTabControl.RestoreFromXElement(element);
+        }
+
+        // Membro IWorkspacePersistence. Necessário para salvar a janela no workspace
+        public void Save(XDocument document, XElement element)
+        {
+            if (MainTabControl != null)
+                MainTabControl.SaveToXElement(element);
+        }
+
+        // Membro IWorkspacePersistence
+        public WorkspaceOptions WorkspaceOptions
+        { get; set; }
+    }
+}

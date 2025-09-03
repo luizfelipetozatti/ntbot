@@ -1,0 +1,39 @@
+# Ignorar o projeto template NinjaTraderAddOnProject (não versionar)
+/NinjaTraderAddOnProject/
+/NinjaTraderAddOnProject.sln
+/NinjaTraderAddOnProject.zip
+
+# VS Code settings (gerados localmente)
+.vscode/
+
+# Visual Studio / Rider
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln*docstates
+.idea/
+
+# Dependências e pacotes
+packages/
+*.nupkg
+project.lock.json
+
+# Build outputs (não versionar binários)
+**/bin/
+**/obj/
+
+# Logs e caches
+*.log
+*.cache
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# NinjaTrader copy targets (evita commitar binários copiados para Custom)
+**/bin/Debug/*.dll
+**/bin/Release/*.dll
+
+# Exceção: certifique-se que o código fonte do NTBot permanece versionado
+# (arquivos de source não são ignorados explicitamente)

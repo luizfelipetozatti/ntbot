@@ -1,0 +1,177 @@
+<t:NTTabPage	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:t="clr-namespace:NinjaTrader.Gui.Tools;assembly=NinjaTrader.Gui"          
+		xmlns:system="clr-namespace:System;assembly=mscorlib" 
+		xmlns:TradePerformance="clr-namespace:NinjaTrader.Gui.TradePerformance;assembly=NinjaTrader.Gui" 
+		xmlns:AccountData="clr-namespace:NinjaTrader.Gui.AccountData;assembly=NinjaTrader.Gui" 
+		xmlns:AtmStrategy="clr-namespace:NinjaTrader.Gui.NinjaScript.AtmStrategy;assembly=NinjaTrader.Gui"
+        x:Class="NTBot.TradingBotPage" >
+    <Grid Background="Transparent">
+        <!-- Define o layout em duas colunas. Lado esquerdo para controles, lado direito para saída/informações -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="40*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Controles do lado esquerdo -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid Background="Transparent">
+                <Grid.RowDefinitions>
+                    <!-- Seção da Conta -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Seção do Instrumento -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Seção de Estratégia -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Seção de Gerenciamento de Risco -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Seção de Controle -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- SEÇÃO DA CONTA -->
+                <TextBlock Text="Configuração da Conta" Style="{StaticResource FontLabel}" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,0,5"/>
+                <t:AccountSelector x:Name="accountSelector" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,10"/>
+
+                <!-- SEÇÃO DO INSTRUMENTO -->
+                <TextBlock Text="Configuração do Instrumento" Style="{StaticResource FontLabel}" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,0,5"/>
+                <t:InstrumentSelector x:Name="instrumentSelector" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,5"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,10">
+                    <TextBlock Text="Período: " VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <t:IntervalSelector x:Name="intervalSelector" Width="150"/>
+                </StackPanel>
+
+                <!-- SEÇÃO DE ESTRATÉGIA -->
+                <TextBlock Text="Configuração da Estratégia" Style="{StaticResource FontLabel}" FontWeight="Bold" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,0,5"/>
+                <ComboBox x:Name="strategyTypeComboBox" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,5" 
+                          SelectionChanged="OnStrategyTypeChanged">
+                    <ComboBoxItem Content="Média Móvel Cruzamento" IsSelected="True"/>
+                    <ComboBoxItem Content="RSI Sobrecomprado/Sobrevendido"/>
+                    <ComboBoxItem Content="Bandas de Bollinger"/>
+                </ComboBox>
+                
+                <!-- Parâmetros de Estratégia (visibilidade controlada pelo código) -->
+                <StackPanel x:Name="movingAveragePanel" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,5">
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Período MA Rápida: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="fastMAPeriodTextBox" Text="9" Width="50"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Período MA Lenta: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="slowMAPeriodTextBox" Text="21" Width="50"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel x:Name="rsiPanel" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,5" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Período RSI: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="rsiPeriodTextBox" Text="14" Width="50"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Sobrecomprado: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="overBoughtTextBox" Text="70" Width="50"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Sobrevendido: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="overSoldTextBox" Text="30" Width="50"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel x:Name="bollingerPanel" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,5" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Período BB: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="bbPeriodTextBox" Text="20" Width="50"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Desvio Padrão: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="stdDevTextBox" Text="2" Width="50"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- SEÇÃO DE GERENCIAMENTO DE RISCO -->
+                <TextBlock Text="Gerenciamento de Risco" Style="{StaticResource FontLabel}" FontWeight="Bold" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,0,5"/>
+                <StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,5">
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Tamanho da Posição: " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="positionSizeTextBox" Text="1" Width="50"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Stop Loss (ticks): " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="stopLossTextBox" Text="10" Width="50"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Take Profit (ticks): " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="takeProfitTextBox" Text="20" Width="50"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Risco Máximo por Dia ($): " VerticalAlignment="Center" Width="150"/>
+                        <TextBox x:Name="maxDailyRiskTextBox" Text="500" Width="50"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- SEÇÃO DE CONTROLE -->
+                <TextBlock Text="Controle de Operação" Style="{StaticResource FontLabel}" FontWeight="Bold" Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,10,0,5"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Margin="5,0,5,5">
+                    <Button x:Name="startButton" Content="Iniciar Bot" Width="100" Margin="0,0,10,0" Click="OnStartButtonClick"/>
+                    <Button x:Name="stopButton" Content="Parar Bot" Width="100" Margin="0,0,10,0" Click="OnStopButtonClick" IsEnabled="False"/>
+                    <Button x:Name="clearButton" Content="Limpar Log" Width="100" Click="OnClearButtonClick"/>
+                </StackPanel>
+                
+                <CheckBox x:Name="autoTradeCheckBox" Content="Trading Automático" Grid.Row="14" Grid.Column="0" Margin="5,5,0,5"/>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Painel de Log do lado direito -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="Log de Atividades" Style="{StaticResource FontLabel}" FontWeight="Bold" Grid.Row="0" Margin="5,10,0,5"/>
+            <TextBox x:Name="logTextBox" Grid.Row="1" Margin="5" IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
+                     TextWrapping="Wrap" />
+            
+            <GroupBox Header="Resumo" Grid.Row="2" Margin="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Posição Atual: " Grid.Row="0" Grid.Column="0"/>
+                    <TextBlock x:Name="currentPositionTextBlock" Text="0" Grid.Row="0" Grid.Column="1"/>
+                    
+                    <TextBlock Text="P&amp;L Atual: " Grid.Row="1" Grid.Column="0"/>
+                    <TextBlock x:Name="currentPLTextBlock" Text="$0.00" Grid.Row="1" Grid.Column="1"/>
+                    
+                    <TextBlock Text="Status: " Grid.Row="2" Grid.Column="0"/>
+                    <TextBlock x:Name="statusTextBlock" Text="Parado" Grid.Row="2" Grid.Column="1"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</t:NTTabPage>
