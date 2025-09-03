@@ -72,26 +72,7 @@ O projeto utiliza as seguintes bibliotecas do NinjaTrader:
 
 ## 🚀 Instalação
 
-### Método 1: Build Automatizado (Recomendado)
-
-1. **Clone o repositório**
-
-   ```bash
-   git clone https://github.com/luizfelipetozatti/ntbot.git
-   cd ntbot
-   ```
-
-2. **Execute o build automatizado**
-
-   ```powershell
-   # No VS Code, use a task configurada
-   Ctrl + Shift + P → "Tasks: Run Task" → "Build e instalar NTBot"
-   
-   # Ou execute diretamente no PowerShell
-   .\.vscode\build_and_copy.ps1
-   ```
-
-### Método 2: Build Manual
+### Build Manual
 
 1. **Compile o projeto**
 
