@@ -35,10 +35,10 @@ NTBot/
 
 ### Software Obrigatório
 
-- 🪟 **Windows 10/11** (64-bit)
-- 🥷 **NinjaTrader 8** (versão mais recente)
+- 🛠️ **Windows 10/11** (64-bit)
+- 🛠️ **NinjaTrader 8** (versão mais recente)
 - 🛠️ **.NET Framework 4.8.1** ou superior
-- 🔨 **Visual Studio 2019/2022** ou **MSBuild Tools**
+- 🛠️ **Visual Studio 2019/2022** ou **MSBuild Tools**
 
 ### Dependências do NinjaTrader
 
