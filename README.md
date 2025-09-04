@@ -1,4 +1,4 @@
-# 🤖 NTBot - Trading Bot para NinjaTrader 8
+# 🤖 NTBot - NT Bot para NinjaTrader 8
 
 [![.NET Framework](https://img.shields.io/badge/.NET-Framework%204.8.1-blue.svg)](https://dotnet.microsoft.com/download/dotnet-framework/net481)
 [![NinjaTrader](https://img.shields.io/badge/NinjaTrader-8-orange.svg)](https://ninjatrader.com/)
@@ -102,7 +102,7 @@ O projeto utiliza as seguintes bibliotecas do NinjaTrader:
 ### 1. Ativação do Add-On
 
 1. Abra o **NinjaTrader 8**
-2. Vá em **New → Trading Bot** no Control Center
+2. Vá em **New → NT Bot** no Control Center
 3. A interface do bot será aberta em nova janela
 
 ### 2. Configuração Básica

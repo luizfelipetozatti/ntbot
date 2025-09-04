@@ -84,13 +84,13 @@ namespace NTBot
                 }
 
                 // Registra o log inicial
-                LogMessage("Trading Bot inicializado. Selecione um instrumento e configure sua estratégia.");
+                LogMessage("NT Bot inicializado. Selecione um instrumento e configure sua estratégia.");
                 System.Diagnostics.Debug.WriteLine("TradingBotPage: Construtor concluído com sucesso");
             }
             catch (Exception ex)
             {
                 // Protege e informa erro de inicialização de forma amigável
-                var msg = "Erro ao inicializar a página do Trading Bot: " + ex.Message;
+                var msg = "Erro ao inicializar a página do NT Bot: " + ex.Message;
                 System.Diagnostics.Debug.WriteLine(msg + "\n" + ex.StackTrace);
                 try
                 {

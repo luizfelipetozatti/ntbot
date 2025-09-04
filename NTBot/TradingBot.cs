@@ -27,7 +27,7 @@ namespace NinjaTrader.Gui.NinjaScript
             if (State == State.SetDefaults)
             {
                 Description = "Bot para execução automática de estratégias de trading";
-                Name = "Trading Bot";
+                Name = "NT Bot";
             }
         }
 
@@ -45,7 +45,7 @@ namespace NinjaTrader.Gui.NinjaScript
                 return;
 
             // 'Header' define o nome do nosso AddOn visto na estrutura do menu
-            tradingBotMenuItem = new NTMenuItem { Header = "Trading Bot", Style = Application.Current.TryFindResource("MainMenuItem") as Style };
+            tradingBotMenuItem = new NTMenuItem { Header = "NT Bot", Style = Application.Current.TryFindResource("MainMenuItem") as Style };
 
             // Adiciona nosso AddOn ao menu "New"
             existingMenuItemInControlCenter.Items.Add(tradingBotMenuItem);
@@ -74,7 +74,7 @@ namespace NinjaTrader.Gui.NinjaScript
         }
     }
 
-    // Factory para criação de abas na janela do Trading Bot
+    // Factory para criação de abas na janela do NT Bot
     public class TradingBotWindowFactory : INTTabFactory
     {
         // Membro INTTabFactory. Necessário para criar a janela principal
@@ -90,13 +90,13 @@ namespace NinjaTrader.Gui.NinjaScript
         }
     }
 
-    // Define a janela principal do Trading Bot
+    // Define a janela principal do NT Bot
     public class TradingBotWindow : NTWindow, IWorkspacePersistence
     {
         public TradingBotWindow()
         {
             // Define o título da janela
-            Caption = "Trading Bot";
+            Caption = "NT Bot";
 
             // Define as dimensões padrão da janela
             Width = 1085;
@@ -114,7 +114,7 @@ namespace NinjaTrader.Gui.NinjaScript
             TabControlManager.SetFactory(tc, new TradingBotWindowFactory());
             Content = tc;
 
-            // Adiciona a página principal do Trading Bot
+            // Adiciona a página principal do NT Bot
             tc.AddNTTabPage(new NTBot.TradingBotPage());
 
             // Configura opções de workspace
