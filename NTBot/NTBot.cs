@@ -10,15 +10,16 @@ using NinjaTrader.Cbi;
 using NinjaTrader.Data;
 using NinjaTrader.Gui.Tools;
 using NinjaTrader.NinjaScript;
+using NTBot;
 #endregion
 
 // Este namespace contém os elementos da GUI e é obrigatório.
 namespace NinjaTrader.Gui.NinjaScript
 {
     // O NinjaTrader cria uma instância de cada classe derivada de "AddOnBase"
-    public class TradingBot : AddOnBase
+    public class NTBot : AddOnBase
     {
-        private NTMenuItem tradingBotMenuItem;
+        private NTMenuItem ntBotMenuItem;
         private NTMenuItem existingMenuItemInControlCenter;
 
         // Configura as propriedades padrão do AddOn
@@ -45,55 +46,55 @@ namespace NinjaTrader.Gui.NinjaScript
                 return;
 
             // 'Header' define o nome do nosso AddOn visto na estrutura do menu
-            tradingBotMenuItem = new NTMenuItem { Header = "NT Bot", Style = Application.Current.TryFindResource("MainMenuItem") as Style };
+            ntBotMenuItem = new NTMenuItem { Header = "NT Bot", Style = Application.Current.TryFindResource("MainMenuItem") as Style };
 
             // Adiciona nosso AddOn ao menu "New"
-            existingMenuItemInControlCenter.Items.Add(tradingBotMenuItem);
+            existingMenuItemInControlCenter.Items.Add(ntBotMenuItem);
 
             // Inscreve-se no evento quando o usuário pressiona o item de menu do nosso AddOn
-            tradingBotMenuItem.Click += OnMenuItemClick;
+            ntBotMenuItem.Click += OnMenuItemClick;
         }
 
         // É chamado quando uma janela do NinjaTrader é destruída
         protected override void OnWindowDestroyed(Window window)
         {
-            if (tradingBotMenuItem != null && window is ControlCenter)
+            if (ntBotMenuItem != null && window is ControlCenter)
             {
-                if (existingMenuItemInControlCenter != null && existingMenuItemInControlCenter.Items.Contains(tradingBotMenuItem))
-                    existingMenuItemInControlCenter.Items.Remove(tradingBotMenuItem);
+                if (existingMenuItemInControlCenter != null && existingMenuItemInControlCenter.Items.Contains(ntBotMenuItem))
+                    existingMenuItemInControlCenter.Items.Remove(ntBotMenuItem);
 
-                tradingBotMenuItem.Click -= OnMenuItemClick;
-                tradingBotMenuItem = null;
+                ntBotMenuItem.Click -= OnMenuItemClick;
+                ntBotMenuItem = null;
             }
         }
 
         // Abre a janela do nosso AddOn quando o item de menu é clicado
         private void OnMenuItemClick(object sender, RoutedEventArgs e)
         {
-            Core.Globals.RandomDispatcher.BeginInvoke(new Action(() => new TradingBotWindow().Show()));
+            Core.Globals.RandomDispatcher.BeginInvoke(new Action(() => new NTBotWindow().Show()));
         }
     }
 
     // Factory para criação de abas na janela do NT Bot
-    public class TradingBotWindowFactory : INTTabFactory
+    public class NTBotWindowFactory : INTTabFactory
     {
         // Membro INTTabFactory. Necessário para criar a janela principal
         public NTWindow CreateParentWindow()
         {
-            return new TradingBotWindow();
+            return new NTBotWindow();
         }
 
         // Membro INTTabFactory. Necessário para criar abas
         public NTTabPage CreateTabPage(string typeName, bool isTrue)
         {
-            return new NTBot.TradingBotPage();
+            return new NTBotPage();
         }
     }
 
     // Define a janela principal do NT Bot
-    public class TradingBotWindow : NTWindow, IWorkspacePersistence
+    public class NTBotWindow : NTWindow, IWorkspacePersistence
     {
-        public TradingBotWindow()
+        public NTBotWindow()
         {
             // Define o título da janela
             Caption = "NT Bot";
@@ -111,17 +112,17 @@ namespace NinjaTrader.Gui.NinjaScript
             TabControlManager.SetCanRemoveTabs(tc, true);
 
             // Define a factory para criar novas abas
-            TabControlManager.SetFactory(tc, new TradingBotWindowFactory());
+            TabControlManager.SetFactory(tc, new NTBotWindowFactory());
             Content = tc;
 
             // Adiciona a página principal do NT Bot
-            tc.AddNTTabPage(new NTBot.TradingBotPage());
+            tc.AddNTTabPage(new NTBotPage());
 
             // Configura opções de workspace
             Loaded += (o, e) =>
             {
                 if (WorkspaceOptions == null)
-                    WorkspaceOptions = new WorkspaceOptions("TradingBot-" + Guid.NewGuid().ToString("N"), this);
+                    WorkspaceOptions = new WorkspaceOptions("NTBot-" + Guid.NewGuid().ToString("N"), this);
             };
         }
 

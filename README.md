@@ -26,9 +26,9 @@ NTBot/
 │   └── TradingCore.cs          # Classes base e interfaces
 ├── 📁 Strategies/              # Estratégias de trading
 │   └── TradingStrategies.cs    # Implementações de estratégias
-├── 📄 TradingBot.cs            # Add-On principal do NinjaTrader
-├── 📄 TradingBotPage.xaml      # Interface gráfica (XAML)
-└── 📄 TradingBotPage.xaml.cs   # Code-behind da interface
+├── 📄 NTBot.cs            # Add-On principal do NinjaTrader
+├── 📄 NTBotPage.xaml      # Interface gráfica (XAML)
+└── 📄 NTBotPage.xaml.cs   # Code-behind da interface
 ```
 
 ## 🔧 Pré-requisitos

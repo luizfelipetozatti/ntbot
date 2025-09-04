@@ -5,7 +5,7 @@
 		xmlns:TradePerformance="clr-namespace:NinjaTrader.Gui.TradePerformance;assembly=NinjaTrader.Gui" 
 		xmlns:AccountData="clr-namespace:NinjaTrader.Gui.AccountData;assembly=NinjaTrader.Gui" 
 		xmlns:AtmStrategy="clr-namespace:NinjaTrader.Gui.NinjaScript.AtmStrategy;assembly=NinjaTrader.Gui"
-        x:Class="NTBot.TradingBotPage" >
+        x:Class="NTBot.NTBotPage" >
     <Grid Background="Transparent">
         <!-- Define o layout em duas colunas. Lado esquerdo para controles, lado direito para saída/informações -->
         <Grid.ColumnDefinitions>

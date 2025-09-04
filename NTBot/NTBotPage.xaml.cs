@@ -16,9 +16,9 @@ using NTBot.Core;
 namespace NTBot
 {
     /// <summary>
-    /// Lógica de interação para TradingBotPage.xaml
+    /// Lógica de interação para NTBotPage.xaml
     /// </summary>
-    public partial class TradingBotPage : NTTabPage, NinjaTrader.Gui.Tools.IInstrumentProvider, NinjaTrader.Gui.Tools.IIntervalProvider
+    public partial class NTBotPage : NTTabPage, NinjaTrader.Gui.Tools.IInstrumentProvider, NinjaTrader.Gui.Tools.IIntervalProvider
     {
         #region Variáveis
         private NinjaTrader.Cbi.Instrument instrument;
@@ -30,62 +30,62 @@ namespace NTBot
         private DispatcherTimer updateTimer;
     #endregion
 
-        public TradingBotPage()
+        public NTBotPage()
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: Construtor iniciado");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: Construtor iniciado");
                 // Força o carregamento do XAML, mas qualquer exceção será capturada
                 InitializeComponent();
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: InitializeComponent concluído");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: InitializeComponent concluído");
 
                 // Define o nome da aba como o instrumento selecionado
                 TabName = "@INSTRUMENT_FULL";
 
                 // Inicializa o gerenciador de risco
                 riskManager = new RiskManager();
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: RiskManager inicializado");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: RiskManager inicializado");
 
                 // Configura o timer para atualizações periódicas da UI
                 updateTimer = new DispatcherTimer();
                 updateTimer.Interval = TimeSpan.FromSeconds(1);
                 updateTimer.Tick += OnUpdateTimerTick;
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: Timer configurado");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: Timer configurado");
 
                 // Associa handlers de eventos (verifica nulos para evitar NRE caso XAML não carregue algum controle)
                 try {
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: Tentando registrar eventos");
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: instrumentSelector=" + (instrumentSelector != null ? "encontrado" : "NULL"));
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: accountSelector=" + (accountSelector != null ? "encontrado" : "NULL"));
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: strategyTypeComboBox=" + (strategyTypeComboBox != null ? "encontrado" : "NULL"));
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: logTextBox=" + (logTextBox != null ? "encontrado" : "NULL"));
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: statusTextBlock=" + (statusTextBlock != null ? "encontrado" : "NULL"));
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: currentPositionTextBlock=" + (currentPositionTextBlock != null ? "encontrado" : "NULL"));
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: currentPLTextBlock=" + (currentPLTextBlock != null ? "encontrado" : "NULL"));
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: Tentando registrar eventos");
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: instrumentSelector=" + (instrumentSelector != null ? "encontrado" : "NULL"));
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: accountSelector=" + (accountSelector != null ? "encontrado" : "NULL"));
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: strategyTypeComboBox=" + (strategyTypeComboBox != null ? "encontrado" : "NULL"));
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: logTextBox=" + (logTextBox != null ? "encontrado" : "NULL"));
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: statusTextBlock=" + (statusTextBlock != null ? "encontrado" : "NULL"));
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: currentPositionTextBlock=" + (currentPositionTextBlock != null ? "encontrado" : "NULL"));
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: currentPLTextBlock=" + (currentPLTextBlock != null ? "encontrado" : "NULL"));
                     
                     if (instrumentSelector != null) {
                         instrumentSelector.InstrumentChanged += OnInstrumentChanged;
-                        System.Diagnostics.Debug.WriteLine("TradingBotPage: InstrumentChanged registrado");
+                        System.Diagnostics.Debug.WriteLine("NTBotPage: InstrumentChanged registrado");
                     }
 
                     // Inscreve-se em atualizações de status de conta (evento estático)
                     Account.AccountStatusUpdate += OnAccountStatusUpdate;
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: AccountStatusUpdate registrado");
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: AccountStatusUpdate registrado");
 
                     // Configura a seleção padrão de estratégia (verifica existência do combo)
                     if (strategyTypeComboBox != null) {
-                        System.Diagnostics.Debug.WriteLine("TradingBotPage: Iniciando OnStrategyTypeChanged inicial");
+                        System.Diagnostics.Debug.WriteLine("NTBotPage: Iniciando OnStrategyTypeChanged inicial");
                         OnStrategyTypeChanged(null, null);
-                        System.Diagnostics.Debug.WriteLine("TradingBotPage: OnStrategyTypeChanged inicial concluído");
+                        System.Diagnostics.Debug.WriteLine("NTBotPage: OnStrategyTypeChanged inicial concluído");
                     }
                 } 
                 catch (Exception e) {
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: Erro ao registrar eventos: " + e.Message + "\n" + e.StackTrace);
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: Erro ao registrar eventos: " + e.Message + "\n" + e.StackTrace);
                 }
 
                 // Registra o log inicial
                 LogMessage("NT Bot inicializado. Selecione um instrumento e configure sua estratégia.");
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: Construtor concluído com sucesso");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: Construtor concluído com sucesso");
             }
             catch (Exception ex)
             {
@@ -583,7 +583,7 @@ namespace NTBot
                 {
                     // Cria uma ordem de compra a mercado
 #pragma warning disable 0612, 0618
-                    Order order = account.CreateOrder(instrument, OrderAction.Buy, OrderType.Market, TimeInForce.Day, quantity, 0, 0, string.Empty, "TradingBot", null);
+                    Order order = account.CreateOrder(instrument, OrderAction.Buy, OrderType.Market, TimeInForce.Day, quantity, 0, 0, string.Empty, "NTBot", null);
                     
                     // Adiciona stop loss e take profit
                     double lastPrice = marketData != null && marketData.Last != null ? marketData.Last.Price : 0.0;
@@ -591,11 +591,11 @@ namespace NTBot
                     double takeProfitPrice = lastPrice + (instrument.MasterInstrument.TickSize * riskManager.TakeProfitTicks);
 
                     // Stop Loss
-                    Order stopOrder = account.CreateOrder(instrument, OrderAction.Sell, OrderType.StopMarket, TimeInForce.Day, quantity, 0, stopLossPrice, string.Empty, "TradingBot-StopLoss", null);
+                    Order stopOrder = account.CreateOrder(instrument, OrderAction.Sell, OrderType.StopMarket, TimeInForce.Day, quantity, 0, stopLossPrice, string.Empty, "NTBot-StopLoss", null);
                     stopOrder.OrderState = OrderState.Working;
 
                     // Take Profit
-                    Order limitOrder = account.CreateOrder(instrument, OrderAction.Sell, OrderType.Limit, TimeInForce.Day, quantity, takeProfitPrice, 0, string.Empty, "TradingBot-TakeProfit", null);
+                    Order limitOrder = account.CreateOrder(instrument, OrderAction.Sell, OrderType.Limit, TimeInForce.Day, quantity, takeProfitPrice, 0, string.Empty, "NTBot-TakeProfit", null);
 #pragma warning restore 0612, 0618
                     limitOrder.OrderState = OrderState.Working;
                     
@@ -608,7 +608,7 @@ namespace NTBot
                 {
                     // Cria uma ordem de venda a mercado
 #pragma warning disable 0612, 0618
-                    Order order = account.CreateOrder(instrument, OrderAction.Sell, OrderType.Market, TimeInForce.Day, quantity, 0, 0, string.Empty, "TradingBot", null);
+                    Order order = account.CreateOrder(instrument, OrderAction.Sell, OrderType.Market, TimeInForce.Day, quantity, 0, 0, string.Empty, "NTBot", null);
                     
                     // Adiciona stop loss e take profit
                     double lastPrice = marketData != null && marketData.Last != null ? marketData.Last.Price : 0.0;
@@ -616,11 +616,11 @@ namespace NTBot
                     double takeProfitPrice = lastPrice - (instrument.MasterInstrument.TickSize * riskManager.TakeProfitTicks);
 
                     // Stop Loss
-                    Order stopOrder = account.CreateOrder(instrument, OrderAction.Buy, OrderType.StopMarket, TimeInForce.Day, quantity, 0, stopLossPrice, string.Empty, "TradingBot-StopLoss", null);
+                    Order stopOrder = account.CreateOrder(instrument, OrderAction.Buy, OrderType.StopMarket, TimeInForce.Day, quantity, 0, stopLossPrice, string.Empty, "NTBot-StopLoss", null);
                     stopOrder.OrderState = OrderState.Working;
 
                     // Take Profit
-                    Order limitOrder = account.CreateOrder(instrument, OrderAction.Buy, OrderType.Limit, TimeInForce.Day, quantity, takeProfitPrice, 0, string.Empty, "TradingBot-TakeProfit", null);
+                    Order limitOrder = account.CreateOrder(instrument, OrderAction.Buy, OrderType.Limit, TimeInForce.Day, quantity, takeProfitPrice, 0, string.Empty, "NTBot-TakeProfit", null);
 #pragma warning restore 0612, 0618
                     limitOrder.OrderState = OrderState.Working;
                     
@@ -641,7 +641,7 @@ namespace NTBot
                         int exitQuantity = Math.Abs(position.Quantity);
                         
 #pragma warning disable 0612, 0618
-                        Order order = account.CreateOrder(instrument, action, OrderType.Market, TimeInForce.Day, exitQuantity, 0, 0, string.Empty, "TradingBot-Exit", null);
+                        Order order = account.CreateOrder(instrument, action, OrderType.Market, TimeInForce.Day, exitQuantity, 0, 0, string.Empty, "NTBot-Exit", null);
 #pragma warning restore 0612, 0618
                         account.Submit(new[] { order });
                         
@@ -742,51 +742,51 @@ namespace NTBot
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: Cleanup iniciado");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: Cleanup iniciado");
                 
                 // Desinscreve eventos
                 try
                 {
                     Account.AccountStatusUpdate -= OnAccountStatusUpdate;
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: AccountStatusUpdate desregistrado");
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: AccountStatusUpdate desregistrado");
                     
                     if (updateTimer != null)
                     {
                         updateTimer.Stop();
                         updateTimer.Tick -= OnUpdateTimerTick;
-                        System.Diagnostics.Debug.WriteLine("TradingBotPage: Timer parado e desregistrado");
+                        System.Diagnostics.Debug.WriteLine("NTBotPage: Timer parado e desregistrado");
                     }
                     
                     if (instrumentSelector != null)
                     {
                         instrumentSelector.InstrumentChanged -= OnInstrumentChanged;
-                        System.Diagnostics.Debug.WriteLine("TradingBotPage: instrumentSelector.InstrumentChanged desregistrado");
+                        System.Diagnostics.Debug.WriteLine("NTBotPage: instrumentSelector.InstrumentChanged desregistrado");
                     }
                     
                     if (marketData != null)
                     {
                         marketData.Update -= OnMarketData;
-                        System.Diagnostics.Debug.WriteLine("TradingBotPage: marketData.Update desregistrado");
+                        System.Diagnostics.Debug.WriteLine("NTBotPage: marketData.Update desregistrado");
                     }
                     
                     if (barsRequest != null)
                     {
                         barsRequest.Update -= OnBarsUpdate;
-                        System.Diagnostics.Debug.WriteLine("TradingBotPage: barsRequest.Update desregistrado");
+                        System.Diagnostics.Debug.WriteLine("NTBotPage: barsRequest.Update desregistrado");
                     }
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("TradingBotPage: Erro ao desregistrar eventos: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine("NTBotPage: Erro ao desregistrar eventos: " + ex.Message);
                 }
                 
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: Chamando Cleanup da classe base");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: Chamando Cleanup da classe base");
                 base.Cleanup();
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: Cleanup concluído");
+                System.Diagnostics.Debug.WriteLine("NTBotPage: Cleanup concluído");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("TradingBotPage: Erro em Cleanup: " + ex.Message + "\n" + ex.StackTrace);
+                System.Diagnostics.Debug.WriteLine("NTBotPage: Erro em Cleanup: " + ex.Message + "\n" + ex.StackTrace);
             }
         }
 

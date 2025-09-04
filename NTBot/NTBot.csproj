@@ -59,13 +59,13 @@
     <Compile Include="Core\TradingCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategies\TradingStrategies.cs" />
-    <Compile Include="TradingBot.cs" />
-    <Compile Include="TradingBotPage.xaml.cs">
-      <DependentUpon>TradingBotPage.xaml</DependentUpon>
+    <Compile Include="NTBot.cs" />
+    <Compile Include="NTBotPage.xaml.cs">
+      <DependentUpon>NTBotPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="TradingBotPage.xaml">
+    <Page Include="NTBotPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
